@@ -1,4 +1,10 @@
+"""
+Python wrapper classes for HyFlex (should be a separate file, or even project)
+"""
+
 from enum import Enum
+
+from typing import List
 
 
 class ProblemDomain:
@@ -6,7 +12,7 @@ class ProblemDomain:
     This class implements a generic python wrapper for HyFlex problem domains.
     """
 
-    HeuristicType = Enum('CROSSOVER', 'LOCAL_SEARCH', 'MUTATION', 'OTHER', 'RUIN_RECREATE')
+    HeuristicType = Enum('HeuristicType', 'CROSSOVER LOCAL_SEARCH MUTATION OTHER RUIN_RECREATE')
 
     def __init__(self, domain: str, seed: int):
         """
@@ -20,7 +26,7 @@ class ProblemDomain:
         """
         raise NotImplementedError
 
-    def getHeuristicCallRecord(self) -> list[int]:
+    def getHeuristicCallRecord(self) -> List[int]:
         """
         Shows how many times each low level heuristic has been called.
 
@@ -29,7 +35,7 @@ class ProblemDomain:
         """
         raise NotImplementedError
 
-    def getHeuristicCallTimeRecord(self) -> list[int]:
+    def getHeuristicCallTimeRecord(self) -> List[int]:
         """
         Shows the total time that each low level heuristic has been operating on the problem.
 
@@ -81,7 +87,7 @@ class ProblemDomain:
         """
         raise NotImplementedError
 
-    def getHeuristicsOfType(self, heuristicType: HeuristicType) -> list[int]:
+    def getHeuristicsOfType(self, heuristicType: HeuristicType) -> List[int]:
         """
         Gets an array of heuristicIDs of the type specified by heuristicType.
 
@@ -91,7 +97,7 @@ class ProblemDomain:
         """
         raise NotImplementedError
 
-    def getHeuristicsThatUseIntensityOfMutation(self) -> list[int]:
+    def getHeuristicsThatUseIntensityOfMutation(self) -> List[int]:
         """
         Gets an array of heuristicIDs that use the intensityOfMutation parameter
 
@@ -101,7 +107,7 @@ class ProblemDomain:
         """
         raise NotImplementedError
 
-    def getHeuristicsThatUseDepthOfSearch(self) -> list[int]:
+    def getHeuristicsThatUseDepthOfSearch(self) -> List[int]:
         """
         Gets an array of heuristicIDs that use the depthOfSearch parameter
 
@@ -244,4 +250,128 @@ class ProblemDomain:
         :param solutionIndex2: The index of the second solution in the comparison
         :return: true if the solutions are identical, false otherwise.
         """
+        raise NotImplementedError
+
+
+"""
+Gym Environment for HyFlex
+"""
+from dacbench import AbstractEnv
+
+
+class HyFlexEnv(AbstractEnv):
+    """
+    Environment to control the step size of CMA-ES
+    """
+
+    def __init__(self, config):
+        """
+        Initialize CMA Env
+
+        Parameters
+        -------
+        config : objdict
+            Environment configuration
+        """
+        super(HyFlexEnv, self).__init__(config)
+
+        # TODO
+        raise NotImplementedError
+
+        if "reward_function" in config.keys():
+            self.get_reward = config["reward_function"]
+        else:
+            self.get_reward = self.get_default_reward
+
+        if "state_method" in config.keys():
+            self.get_state = config["state_method"]
+        else:
+            self.get_state = self.get_default_state
+
+    def step(self, action):
+        """
+        Execute environment step
+
+        Parameters
+        ----------
+        action : list
+            action to execute
+
+        Returns
+        -------
+        np.array, float, bool, dict
+            state, reward, done, info
+        """
+        done = super(HyFlexEnv, self).step_()
+
+        # TODO
+        raise NotImplementedError
+
+        return self.get_state(self), self.get_reward(self), done, {}
+
+    def reset(self):
+        """
+        Reset environment
+
+        Returns
+        -------
+        np.array
+            Environment state
+        """
+        super(HyFlexEnv, self).reset_()
+
+        # TODO
+        raise NotImplementedError
+
+        return self.get_state(self)
+
+    def close(self):
+        """
+        No additional cleanup necessary
+
+        Returns
+        -------
+        bool
+            Cleanup flag
+        """
+        return True
+
+    def render(self, mode: str = "human"):
+        """
+        Render env in human mode
+
+        Parameters
+        ----------
+        mode : str
+            Execution mode
+        """
+        if mode != "human":
+            raise NotImplementedError
+
+        pass
+
+    def get_default_reward(self, _):
+        """
+        Compute reward
+
+        Returns
+        -------
+        float
+            Reward
+
+        """
+        # TODO
+        raise NotImplementedError
+
+    def get_default_state(self, _):
+        """
+        Gather state description
+
+        Returns
+        -------
+        dict
+            Environment state
+
+        """
+        # TODO
         raise NotImplementedError
